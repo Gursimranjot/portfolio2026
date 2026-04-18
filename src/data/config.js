@@ -3,7 +3,7 @@ export const siteConfig = {
   title: "Designer & Developer",
   tagline: "Crafting digital\nexperiences",
   description: "UI/UX designer and front-end developer with a passion for building beautiful, functional products. Available for freelance work.",
-  email: "hello@yourname.com",
+  email: "simran23dhiman@gmail.com",
   links: {
     github: "https://github.com/Gursimranjot",
     linkedin: "https://www.linkedin.com/in/gursimran2/",

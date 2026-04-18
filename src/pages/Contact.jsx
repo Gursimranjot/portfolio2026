@@ -1,30 +1,6 @@
-import { useState } from 'react'
 import { siteConfig } from '../data/config'
 
-const IDLE       = 'idle'
-const SUBMITTING = 'submitting'
-const SUCCESS    = 'success'
-const ERROR      = 'error'
-
 export default function Contact() {
-  const [status, setStatus] = useState(IDLE)
-  const [fields, setFields] = useState({ name: '', email: '', budget: '', message: '' })
-
-  const set = (k) => (e) => setFields(f => ({ ...f, [k]: e.target.value }))
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setStatus(SUBMITTING)
-    try {
-      const res = await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ 'form-name': 'contact', ...fields }).toString(),
-      })
-      if (res.ok) { setStatus(SUCCESS); setFields({ name: '', email: '', budget: '', message: '' }) }
-      else setStatus(ERROR)
-    } catch { setStatus(ERROR) }
-  }
 
   return (
     <div className="page-enter">
@@ -46,27 +22,26 @@ export default function Contact() {
 
         {/* ── Contact Form ── */}
         <form
-          onSubmit={handleSubmit}
+          method="POST"
           data-netlify="true"
-          data-netlify-honeypot="bot-field"
           name="contact"
           style={{ width: '100%', maxWidth: 560, margin: '0 auto 64px' }}
         >
           <input type="hidden" name="form-name" value="contact" />
-          <p style={{ display: 'none' }}><input name="bot-field" /></p>
+          <p style={{ display: 'none' }}><label>Don't fill this out: <input name="bot-field" /></label></p>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
             <Field label="Name *">
-              <input name="name" type="text" placeholder="Your name" value={fields.name} onChange={set('name')} required />
+              <input name="name" type="text" placeholder="Your name" required />
             </Field>
             <Field label="Email *">
-              <input name="email" type="email" placeholder="you@example.com" value={fields.email} onChange={set('email')} required />
+              <input name="email" type="email" placeholder="you@example.com" required />
             </Field>
           </div>
 
           <div style={{ marginBottom: 12 }}>
             <Field label="Budget range">
-              <select name="budget" value={fields.budget} onChange={set('budget')}>
+              <select name="budget">
                 <option value="">Select a range…</option>
                 <option value="Under $1k">Under $1,000</option>
                 <option value="$1k–$5k">$1,000 – $5,000</option>
@@ -79,25 +54,14 @@ export default function Contact() {
 
           <div style={{ marginBottom: 24 }}>
             <Field label="Message *">
-              <textarea name="message" rows={5} placeholder="Tell me about your project…" value={fields.message} onChange={set('message')} required />
+              <textarea name="message" rows={5} placeholder="Tell me about your project…" required />
             </Field>
           </div>
 
-          <button type="submit" disabled={status === SUBMITTING} className="btn btn-primary"
-            style={{ width: '100%', justifyContent: 'center', fontSize: 13, padding: '16px 28px', opacity: status === SUBMITTING ? 0.6 : 1 }}>
-            {status === SUBMITTING ? 'Sending…' : 'Send message ↗'}
+          <button type="submit" className="btn btn-primary"
+            style={{ width: '100%', justifyContent: 'center', fontSize: 13, padding: '16px 28px' }}>
+            Send message ↗
           </button>
-
-          {status === SUCCESS && (
-            <div style={{ marginTop: 16, padding: '14px 18px', border: '1px solid rgba(74,222,128,0.3)', borderRadius: 2, background: 'rgba(74,222,128,0.06)', fontFamily: 'var(--font-mono)', fontSize: 12, color: '#4ade80', letterSpacing: '0.04em' }}>
-              ✓ Message sent! I'll get back to you within 24 hours.
-            </div>
-          )}
-          {status === ERROR && (
-            <div style={{ marginTop: 16, padding: '14px 18px', border: '1px solid rgba(248,113,113,0.3)', borderRadius: 2, background: 'rgba(248,113,113,0.06)', fontFamily: 'var(--font-mono)', fontSize: 12, color: '#f87171', letterSpacing: '0.04em' }}>
-              ✗ Something went wrong. Email me at <a href={`mailto:${siteConfig.email}`} style={{ color: 'var(--accent)' }}>{siteConfig.email}</a>
-            </div>
-          )}
         </form>
 
         <div className="contact-links">
