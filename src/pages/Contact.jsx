@@ -2,6 +2,21 @@ import { siteConfig } from '../data/config'
 
 export default function Contact() {
 
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const form = e.target;
+  const formData = new FormData(form);
+
+  await fetch("/", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams(formData).toString(),
+  });
+
+  alert("Message sent!");
+};
+
   return (
     <div className="page-enter">
       <div className="contact-section" style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -25,6 +40,8 @@ export default function Contact() {
           method="POST"
           data-netlify="true"
           name="contact"
+          netlify-honeypot="bot-field"
+          onSubmit={handleSubmit}
           style={{ width: '100%', maxWidth: 560, margin: '0 auto 64px' }}
         >
           <input type="hidden" name="form-name" value="contact" />
